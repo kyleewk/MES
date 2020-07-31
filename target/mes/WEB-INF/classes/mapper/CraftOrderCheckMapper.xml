@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kgc.mapper.CraftOrderCheckMapper">
+  <resultMap id="BaseResultMap" type="cn.kgc.pojo.CraftOrderCheck">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="checkId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="opinion" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="operation" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, checkId, opinion, operation
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from craft_check_res
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from craft_check_res
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.kgc.pojo.CraftOrderCheck">
+    insert into craft_check_res (id, checkId, opinion, 
+      operation)
+    values (#{id,jdbcType=INTEGER}, #{checkid,jdbcType=INTEGER}, #{opinion,jdbcType=VARCHAR}, 
+      #{operation,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.kgc.pojo.CraftOrderCheck">
+    insert into craft_check_res
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="checkid != null">
+        checkId,
+      </if>
+      <if test="opinion != null">
+        opinion,
+      </if>
+      <if test="operation != null">
+        operation,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="checkid != null">
+        #{checkid,jdbcType=INTEGER},
+      </if>
+      <if test="opinion != null">
+        #{opinion,jdbcType=VARCHAR},
+      </if>
+      <if test="operation != null">
+        #{operation,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.kgc.pojo.CraftOrderCheck">
+    update craft_check_res
+    <set>
+      <if test="checkid != null">
+        checkId = #{checkid,jdbcType=INTEGER},
+      </if>
+      <if test="opinion != null">
+        opinion = #{opinion,jdbcType=VARCHAR},
+      </if>
+      <if test="operation != null">
+        operation = #{operation,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.kgc.pojo.CraftOrderCheck">
+    update craft_check_res
+    set checkId = #{checkid,jdbcType=INTEGER},
+      opinion = #{opinion,jdbcType=VARCHAR},
+      operation = #{operation,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

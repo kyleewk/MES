@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kgc.mapper.ProcessMapper">
+  <resultMap id="BaseResultMap" type="cn.kgc.pojo.Process">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="orderId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="NGNum" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="realNum" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="status" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="modifyDate" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="isClosed" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    </constructor>
+  </resultMap>
+
+  <resultMap id="po" type="cn.kgc.pojo.Process">
+    <id column="id" property="id" javaType="java.lang.Integer"/>
+    <result column="orderId" property="orderid" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="NGNum" property="ngnum" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="realNum" property="realnum" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="status" property="status" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <association property="order" resultMap="or" />
+  </resultMap>
+  <resultMap id="or" type="cn.kgc.pojo.Order">
+    <id column="id" property="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="productLine" property="productline" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="device" property="device"  javaType="java.lang.String" jdbcType="VARCHAR" />
+    <result column="materiel" property="materiel" javaType="java.lang.String" jdbcType="VARCHAR" />
+    <result column="team" property="team" javaType="java.lang.String" jdbcType="VARCHAR" />
+    <result column="leader" property="leader" javaType="java.lang.String" jdbcType="VARCHAR" />
+    <result column="progress" property="progress" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="machineType" property="machinetype"  javaType="java.lang.String" jdbcType="VARCHAR" />
+    <result column="targetNum" property="targetnum" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="startTime" property="starttime" javaType="java.util.Date" jdbcType="DATE" />
+    <result column="endTime" property="endtime" javaType="java.util.Date" jdbcType="DATE" />
+    <result column="connectId" property="connectid"  javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="createTime" property="createtime"  javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    <result column="nextId" property="nextid" javaType="java.lang.String" jdbcType="VARCHAR" />
+    <result column="modifyTime" property="modifytime"  javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    <result column="status" property="status"  javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="isClosed" property="isclosed"  javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="closeReason" property="closereason"  javaType="java.lang.String" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, orderId, NGNum, realNum, status, modifyDate, isClosed
+  </sql>
+
+  <select id="findList" resultMap="po">
+    select p.id,p.orderId,o.machineType,o.productLine,o.targetNum,o.startTime,o.endTime,p.realNum,p.NGNum,p.`status`,p.modifyDate
+    from process p join orderlist o on p.orderId = o.id
+    <where>
+      o.status = 4 and p.status not in (-2,2)
+      <if test="status != -3">
+        and p.status = #{status}
+      </if>
+      <if test="orderid != null and orderid != ''">
+        and p.orderid = #{orderid}
+      </if>
+    </where>
+    ORDER BY p.modifyDate DESC
+  </select>
+
+  <select id="getPro3" resultMap="po">
+    select o.machineType,sum(o.targetNum) targetNum,sum(p.realNum) realNum
+    from process p join orderlist o on p.orderId = o.id
+		-- WHERE DATE_FORMAT( o.startTime, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+		GROUP  BY o.machineType
+    LIMIT	0,5
+  </select>
+
+  <select id="getYield" resultMap="po">
+    select p.realNum,p.NGNum
+    from process p join orderlist o on p.orderId = o.id
+    -- WHERE DATE_FORMAT( o.startTime, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+    GROUP BY o.machineType
+  </select>
+
+  <select id="sum" resultType="java.lang.Integer">
+    SELECT sum(realNum)
+    from process p join orderlist o on p.orderId = o.id
+--     WHERE DATE_FORMAT( o.startTime, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+  </select>
+
+  <select id="getPending" resultType="java.lang.Integer">
+    SELECT COUNT(id)
+    FROM `process`
+    WHERE `status` = 2
+  </select>
+
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from process
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from process
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.kgc.pojo.Process">
+    insert into process (id, orderId, NGNum, 
+      realNum, status, modifyDate, 
+      isClosed)
+    values (#{id,jdbcType=INTEGER}, #{orderid,jdbcType=INTEGER}, #{ngnum,jdbcType=INTEGER}, 
+      #{realnum,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, now(),
+      #{isclosed,jdbcType=INTEGER})
+  </insert>
+
+  <insert id="insertPro" parameterType="cn.kgc.pojo.Process">
+    insert into process (orderId,modifyDate)
+    values (#{orderid,jdbcType=INTEGER},now())
+  </insert>
+
+  <insert id="insertSelective" parameterType="cn.kgc.pojo.Process">
+    insert into process
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="orderid != null">
+        orderId,
+      </if>
+      <if test="ngnum != null">
+        NGNum,
+      </if>
+      <if test="realnum != null">
+        realNum,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="modifydate != null">
+        modifyDate,
+      </if>
+      <if test="isclosed != null">
+        isClosed,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="orderid != null">
+        #{orderid,jdbcType=INTEGER},
+      </if>
+      <if test="ngnum != null">
+        #{ngnum,jdbcType=INTEGER},
+      </if>
+      <if test="realnum != null">
+        #{realnum,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="modifydate != null">
+        #{modifydate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isclosed != null">
+        #{isclosed,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.kgc.pojo.Process">
+    update process
+    <set>
+      <if test="orderid != null">
+        orderId = #{orderid,jdbcType=INTEGER},
+      </if>
+      <if test="ngnum != null">
+        NGNum = #{ngnum,jdbcType=INTEGER},
+      </if>
+      <if test="realnum != null">
+        realNum = #{realnum,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="modifydate != null">
+        modifyDate = #{modifydate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isclosed != null">
+        isClosed = #{isclosed,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.kgc.pojo.Process">
+    update process
+    set orderId = #{orderid,jdbcType=INTEGER},
+      NGNum = #{ngnum,jdbcType=INTEGER},
+      realNum = #{realnum,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      modifyDate = #{modifydate,jdbcType=TIMESTAMP},
+      isClosed = #{isclosed,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="forIndexProcess" resultMap="po">
+    select o.machineType,o.startTime,o.endTime,p.realNum,p.NGNum,o.targetNum,p.status
+    from process p join orderlist o on p.orderId = o.id
+--     WHERE DATE_FORMAT( o.startTime, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )
+    GROUP BY o.machineType
+  </select>
+
+</mapper>

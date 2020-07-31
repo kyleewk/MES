@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kgc.mapper.RepairMapper">
+  <resultMap id="BaseResultMap" type="cn.kgc.pojo.Repair">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="orderId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="repairType" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="modifyReason" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="modifyDate" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="repairTeam" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="applicantName" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, orderId, repairType, modifyReason, modifyDate, repairTeam, applicantName
+  </sql>
+
+  <select id="findList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from repair
+    <where>
+      <if test="orderid != null and orderid != ''">
+        and orderId like concat ('%',#{orderid},'%')
+      </if>
+      <if test="applicantname != null and applicantname != ''">
+        and applicantName like concat ('%',#{applicantname},'%')
+      </if>
+    </where>
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from repair
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from repair
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.kgc.pojo.Repair">
+    insert into repair (orderId, repairType,
+      modifyReason, modifyDate, repairTeam, 
+      applicantName)
+    values (#{orderid,jdbcType=INTEGER}, #{repairtype,jdbcType=VARCHAR},
+      #{modifyreason,jdbcType=VARCHAR}, #{modifydate,jdbcType=TIMESTAMP}, #{repairteam,jdbcType=VARCHAR},
+      #{applicantname,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.kgc.pojo.Repair">
+    insert into repair
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="orderid != null">
+        orderId,
+      </if>
+      <if test="repairtype != null">
+        repairType,
+      </if>
+      <if test="modifyreason != null">
+        modifyReason,
+      </if>
+      <if test="modifydate != null">
+        modifyDate,
+      </if>
+      <if test="repairteam != null">
+        repairTeam,
+      </if>
+      <if test="applicantname != null">
+        applicantName,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderid != null">
+        #{orderid,jdbcType=INTEGER},
+      </if>
+      <if test="repairtype != null">
+        #{repairtype,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyreason != null">
+        #{modifyreason,jdbcType=VARCHAR},
+      </if>
+      <if test="modifydate != null">
+        #{modifydate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="repairteam != null">
+        #{repairteam,jdbcType=VARCHAR},
+      </if>
+      <if test="applicantname != null">
+        #{applicantname,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.kgc.pojo.Repair">
+    update repair
+    <set>
+      <if test="orderid != null">
+        orderId = #{orderid,jdbcType=INTEGER},
+      </if>
+      <if test="repairtype != null">
+        repairType = #{repairtype,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyreason != null">
+        modifyReason = #{modifyreason,jdbcType=VARCHAR},
+      </if>
+      <if test="modifydate != null">
+        modifyDate = #{modifydate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="repairteam != null">
+        repairTeam = #{repairteam,jdbcType=VARCHAR},
+      </if>
+      <if test="applicantname != null">
+        applicantName = #{applicantname,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.kgc.pojo.Repair">
+    update repair
+    set orderId = #{orderid,jdbcType=INTEGER},
+      repairType = #{repairtype,jdbcType=VARCHAR},
+      modifyReason = #{modifyreason,jdbcType=VARCHAR},
+      modifyDate = #{modifydate,jdbcType=TIMESTAMP},
+      repairTeam = #{repairteam,jdbcType=VARCHAR},
+      applicantName = #{applicantname,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

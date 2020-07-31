@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd">
+
+
+	
+	
+	<!-- 注解驱动配置方案 -->
+	<!-- 扫描注解标签注入控制器 -->
+	<context:component-scan base-package="cn.kgc.control"/>
+	<!-- 启用注解驱动配置方案 -->
+	<mvc:annotation-driven >
+		<!-- ajax返回字符集设置
+			 dataType:'json' 和dataType:'text',
+		 -->
+	<mvc:message-converters>
+		<!-- StringHttpMessageConverter这个信息转换类：处理原生ajax(response实现ajax) -->
+		<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+			<property name="supportedMediaTypes">
+				<list>
+					<value>application/json;charset=UTF-8</value>
+					<value>text/html;charset=UTF-8</value>
+				</list>
+			</property>
+		</bean>
+		<!-- FastJsonHttpMessageConverter:@ResponseBody实现ajax的字符集处理 -->
+		<bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+			<property name="supportedMediaTypes">
+				<list>
+					<value>application/json;charset=UTF-8</value>
+					<value>text/html;charset=UTF-8</value>
+				</list>
+			</property>
+		</bean>
+	</mvc:message-converters>
+	</mvc:annotation-driven>
+	
+	
+	<!-- 跳转规则 
+		   视图解析器：将逻辑视图名转换成一个具体的地址
+		 逻辑视图名 -> /view/逻辑视图名.jsp	
+	-->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" >
+		<property name="prefix" value="/WEB-INF/view/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+	
+	
+	
+	<!-- CommonsMultipartResolver,公共附件解析器
+		 id：multipartResolver，该id值唯一，不能改成其他值
+	 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- 附件表单文字字符集 -->
+		<property name="defaultEncoding" value="UTF-8"/>
+		<!-- 一次一共上传附件最大值 -->
+		<property name="maxUploadSize" value="400000"/>
+		<!-- 附件每个最大值 -->
+		<property name="maxUploadSizePerFile" value="102400"/>
+	</bean>
+	
+	<!-- 静态资源处理 -->
+	<mvc:resources location="/statices/" mapping="/statices/**" />
+	
+	<!-- 登录拦截 -->
+	<!--<mvc:interceptors>
+		&lt;!&ndash; interceptor其中一个拦截器 &ndash;&gt;
+		<mvc:interceptor>
+			&lt;!&ndash; mapping处理哪些请求 &ndash;&gt;
+			<mvc:mapping path="/**"/>
+			&lt;!&ndash; exclude-mapping哪些请求不处理 &ndash;&gt;
+			<mvc:exclude-mapping path="/static/**"/>
+			<mvc:exclude-mapping path="/emp/login"/>
+			<mvc:exclude-mapping path="/emp/toLogin"/>
+			&lt;!&ndash; bean是拦截器处理类 &ndash;&gt;
+			<bean class="cn.kgc.util.LoginInteptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>-->
+	
+
+	
+</beans>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

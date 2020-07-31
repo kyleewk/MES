@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kgc.mapper.MaintainMapper">
+  <resultMap id="BaseResultMap" type="cn.kgc.pojo.Maintain">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="deviceName" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="specification" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="fault" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="maintanence" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="maintainer" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="maintanenceDate" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id,deviceName, specification, fault, maintanence, maintainer, maintanenceDate
+  </sql>
+
+  <select id="findList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from maintain
+    <where>
+      <if test="devicename != null and devicename != ''">
+        devicename = #{devicename}
+      </if>
+      <if test="specification != null and specification != ''">
+        specification = #{specification}
+      </if>
+    </where>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from maintain
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from maintain
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.kgc.pojo.Maintain">
+    insert into maintain (id,deviceName, specification,
+      fault, maintanence, maintainer, 
+      maintanenceDate)
+    values (#{id,jdbcType=INTEGER}, #{devicename,jdbcType=VARCHAR}, #{specification,jdbcType=VARCHAR}, 
+      #{fault,jdbcType=VARCHAR}, #{maintanence,jdbcType=VARCHAR}, #{maintainer,jdbcType=VARCHAR}, 
+      #{maintanencedate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.kgc.pojo.Maintain">
+    insert into maintain
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="devicename != null">
+        " deviceName",
+      </if>
+      <if test="specification != null">
+        specification,
+      </if>
+      <if test="fault != null">
+        fault,
+      </if>
+      <if test="maintanence != null">
+        maintanence,
+      </if>
+      <if test="maintainer != null">
+        maintainer,
+      </if>
+      <if test="maintanencedate != null">
+        maintanenceDate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="devicename != null">
+        #{devicename,jdbcType=VARCHAR},
+      </if>
+      <if test="specification != null">
+        #{specification,jdbcType=VARCHAR},
+      </if>
+      <if test="fault != null">
+        #{fault,jdbcType=VARCHAR},
+      </if>
+      <if test="maintanence != null">
+        #{maintanence,jdbcType=VARCHAR},
+      </if>
+      <if test="maintainer != null">
+        #{maintainer,jdbcType=VARCHAR},
+      </if>
+      <if test="maintanencedate != null">
+        #{maintanencedate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.kgc.pojo.Maintain">
+    update maintain
+    <set>
+      <if test="devicename != null">
+        " deviceName" = #{devicename,jdbcType=VARCHAR},
+      </if>
+      <if test="specification != null">
+        specification = #{specification,jdbcType=VARCHAR},
+      </if>
+      <if test="fault != null">
+        fault = #{fault,jdbcType=VARCHAR},
+      </if>
+      <if test="maintanence != null">
+        maintanence = #{maintanence,jdbcType=VARCHAR},
+      </if>
+      <if test="maintainer != null">
+        maintainer = #{maintainer,jdbcType=VARCHAR},
+      </if>
+      <if test="maintanencedate != null">
+        maintanenceDate = #{maintanencedate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.kgc.pojo.Maintain">
+    update maintain
+    set " deviceName" = #{devicename,jdbcType=VARCHAR},
+      specification = #{specification,jdbcType=VARCHAR},
+      fault = #{fault,jdbcType=VARCHAR},
+      maintanence = #{maintanence,jdbcType=VARCHAR},
+      maintainer = #{maintainer,jdbcType=VARCHAR},
+      maintanenceDate = #{maintanencedate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

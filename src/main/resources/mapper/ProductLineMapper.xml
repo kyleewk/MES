@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kgc.mapper.ProductLineMapper">
+  <resultMap id="BaseResultMap" type="cn.kgc.pojo.ProductLine">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="productDeparment" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="productName" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="productType" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="productOrder" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="peopleTotal" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="outputPlan" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="comlpetionDate" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, productDeparment, productName, productType, productOrder, peopleTotal, outputPlan, 
+    comlpetionDate
+  </sql>
+
+  <select id="findList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from productline
+    <where>
+      <if test="id != null and id != ''">
+        id = #{id}
+      </if>
+      <if test="productdeparment != null and productdeparment != ''">
+        productdeparment = #{productdeparment}
+      </if>
+    </where>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from productline
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from productline
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.kgc.pojo.ProductLine">
+    insert into productline (id, productDeparment, productName, 
+      productType, productOrder, peopleTotal, 
+      outputPlan, comlpetionDate)
+    values (#{id,jdbcType=INTEGER}, #{productdeparment,jdbcType=VARCHAR}, #{productname,jdbcType=VARCHAR}, 
+      #{producttype,jdbcType=VARCHAR}, #{productorder,jdbcType=INTEGER}, #{peopletotal,jdbcType=INTEGER}, 
+      #{outputplan,jdbcType=INTEGER}, #{comlpetiondate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.kgc.pojo.ProductLine">
+    insert into productline
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="productdeparment != null">
+        productDeparment,
+      </if>
+      <if test="productname != null">
+        productName,
+      </if>
+      <if test="producttype != null">
+        productType,
+      </if>
+      <if test="productorder != null">
+        productOrder,
+      </if>
+      <if test="peopletotal != null">
+        peopleTotal,
+      </if>
+      <if test="outputplan != null">
+        outputPlan,
+      </if>
+      <if test="comlpetiondate != null">
+        comlpetionDate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="productdeparment != null">
+        #{productdeparment,jdbcType=VARCHAR},
+      </if>
+      <if test="productname != null">
+        #{productname,jdbcType=VARCHAR},
+      </if>
+      <if test="producttype != null">
+        #{producttype,jdbcType=VARCHAR},
+      </if>
+      <if test="productorder != null">
+        #{productorder,jdbcType=INTEGER},
+      </if>
+      <if test="peopletotal != null">
+        #{peopletotal,jdbcType=INTEGER},
+      </if>
+      <if test="outputplan != null">
+        #{outputplan,jdbcType=INTEGER},
+      </if>
+      <if test="comlpetiondate != null">
+        #{comlpetiondate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.kgc.pojo.ProductLine">
+    update productline
+    <set>
+      <if test="productdeparment != null">
+        productDeparment = #{productdeparment,jdbcType=VARCHAR},
+      </if>
+      <if test="productname != null">
+        productName = #{productname,jdbcType=VARCHAR},
+      </if>
+      <if test="producttype != null">
+        productType = #{producttype,jdbcType=VARCHAR},
+      </if>
+      <if test="productorder != null">
+        productOrder = #{productorder,jdbcType=INTEGER},
+      </if>
+      <if test="peopletotal != null">
+        peopleTotal = #{peopletotal,jdbcType=INTEGER},
+      </if>
+      <if test="outputplan != null">
+        outputPlan = #{outputplan,jdbcType=INTEGER},
+      </if>
+      <if test="comlpetiondate != null">
+        comlpetionDate = #{comlpetiondate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.kgc.pojo.ProductLine">
+    update productline
+    set productDeparment = #{productdeparment,jdbcType=VARCHAR},
+      productName = #{productname,jdbcType=VARCHAR},
+      productType = #{producttype,jdbcType=VARCHAR},
+      productOrder = #{productorder,jdbcType=INTEGER},
+      peopleTotal = #{peopletotal,jdbcType=INTEGER},
+      outputPlan = #{outputplan,jdbcType=INTEGER},
+      comlpetionDate = #{comlpetiondate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

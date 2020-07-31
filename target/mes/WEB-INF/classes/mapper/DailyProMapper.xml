@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kgc.mapper.DailyProMapper">
+  <resultMap id="BaseResultMap" type="cn.kgc.pojo.DailyPro">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="orderId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="NGNum" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="realNum" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="status" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="modifyDate" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="isClosed" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="comm" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, orderId, NGNum, realNum, status, modifyDate, isClosed, comm
+  </sql>
+
+  <select id="findList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from dailypro
+    <where>
+      <if test="orderid != null and orderid != ''">
+        orderId = #{orderid}
+      </if>
+    </where>
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dailypro
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dailypro
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.kgc.pojo.DailyPro">
+    insert into dailypro (orderId, NGNum,
+      realNum, status, modifyDate, 
+      isClosed, comm)
+    values (#{orderid,jdbcType=INTEGER}, #{ngnum,jdbcType=INTEGER},
+      #{realnum,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, now(),
+      #{isclosed,jdbcType=INTEGER}, #{comm,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.kgc.pojo.DailyPro">
+    insert into dailypro
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="orderid != null">
+        orderId,
+      </if>
+      <if test="ngnum != null">
+        NGNum,
+      </if>
+      <if test="realnum != null">
+        realNum,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="modifydate != null">
+        modifyDate,
+      </if>
+      <if test="isclosed != null">
+        isClosed,
+      </if>
+      <if test="comm != null">
+        comm,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderid != null">
+        #{orderid,jdbcType=INTEGER},
+      </if>
+      <if test="ngnum != null">
+        #{ngnum,jdbcType=INTEGER},
+      </if>
+      <if test="realnum != null">
+        #{realnum,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="modifydate != null">
+        #{modifydate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isclosed != null">
+        #{isclosed,jdbcType=INTEGER},
+      </if>
+      <if test="comm != null">
+        #{comm,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.kgc.pojo.DailyPro">
+    update dailypro
+    <set>
+      <if test="orderid != null">
+        orderId = #{orderid,jdbcType=INTEGER},
+      </if>
+      <if test="ngnum != null">
+        NGNum = #{ngnum,jdbcType=INTEGER},
+      </if>
+      <if test="realnum != null">
+        realNum = #{realnum,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="modifydate != null">
+        modifyDate = #{modifydate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isclosed != null">
+        isClosed = #{isclosed,jdbcType=INTEGER},
+      </if>
+      <if test="comm != null">
+        comm = #{comm,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.kgc.pojo.DailyPro">
+    update dailypro
+    set orderId = #{orderid,jdbcType=INTEGER},
+      NGNum = #{ngnum,jdbcType=INTEGER},
+      realNum = #{realnum,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      modifyDate = #{modifydate,jdbcType=TIMESTAMP},
+      isClosed = #{isclosed,jdbcType=INTEGER},
+      comm = #{comm,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

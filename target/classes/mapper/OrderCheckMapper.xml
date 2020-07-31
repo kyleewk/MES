@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kgc.mapper.OrderCheckMapper">
+  <resultMap id="BaseResultMap" type="cn.kgc.pojo.OrderCheck">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="checkId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="orderId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="checkSn" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="checkDate" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="result" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="comm" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+
+  <resultMap id="checkEmp" type="cn.kgc.pojo.OrderCheck">
+      <id column="id" property="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <result column="checkId" property="checkid" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <result column="orderId" property="orderid" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <result column="checkSn" property="checksn" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <result column="checkDate" property="checkdate" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <result column="result" property="result" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <result column="comm" property="comm" javaType="java.lang.String" jdbcType="VARCHAR" />
+    <association property="employee" resultMap="emp" />
+  </resultMap>
+
+  <resultMap id="emp" type="cn.kgc.pojo.Employee">
+    <id column="sn" property="sn"  javaType="java.lang.String" jdbcType="VARCHAR" />
+    <result column="department_id" property="departmentId"  javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="position_id" property="positionId"  javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="name" property="name"  javaType="java.lang.String" jdbcType="VARCHAR" />
+    <result column="password" property="password"  javaType="java.lang.String" jdbcType="VARCHAR" />
+  </resultMap>
+
+
+
+  <sql id="Base_Column_List">
+    id, checkId, orderId, checkSn, checkDate, result, comm
+  </sql>
+
+  <select id="findList" resultMap="checkEmp">
+    select
+    o.id, o.checkId, o.orderId, o.checkSn, o.checkDate, o.result, o.comm
+    ,e.`name`,e.sn
+    from ordercheck o JOIN sys_employee e on o.checkSn = e.sn
+    <where>
+      <if test="orderid != null and orderid != ''">
+        orderId = #{orderid}
+      </if>
+    </where>
+    ORDER BY o.checkDate DESC
+  </select>
+
+  <select id="selectByOrderId" parameterType="java.lang.Integer" resultMap="checkEmp">
+    select
+    o.id, o.checkId, o.orderId, o.checkSn, o.checkDate, o.result, o.comm
+    ,e.`name`,e.sn
+    from ordercheck o JOIN sys_employee e on o.checkSn = e.sn
+    where orderId = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ordercheck
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ordercheck
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.kgc.pojo.OrderCheck">
+    insert into ordercheck (checkId, orderId,checkSn,
+      checkDate, result, comm
+      )
+    values (#{checkid,jdbcType=INTEGER}, #{orderid,jdbcType=INTEGER},#{checksn,jdbcType=VARCHAR},
+      now(), #{result,jdbcType=VARCHAR}, #{comm,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.kgc.pojo.OrderCheck">
+    insert into ordercheck
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="checkid != null">
+        checkId,
+      </if>
+      <if test="orderid != null">
+        orderId,
+      </if>
+      <if test="checksn != null">
+        checkSn,
+      </if>
+      <if test="checkdate != null">
+        checkDate,
+      </if>
+      <if test="result != null">
+        result,
+      </if>
+      <if test="comm != null">
+        comm,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="checkid != null">
+        #{checkid,jdbcType=INTEGER},
+      </if>
+      <if test="orderid != null">
+        #{orderid,jdbcType=INTEGER},
+      </if>
+      <if test="checksn != null">
+        #{checksn,jdbcType=VARCHAR},
+      </if>
+      <if test="checkdate != null">
+        #{checkdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="result != null">
+        #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="comm != null">
+        #{comm,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.kgc.pojo.OrderCheck">
+    update ordercheck
+    <set>
+      <if test="checkid != null">
+        checkId = #{checkid,jdbcType=INTEGER},
+      </if>
+      <if test="orderid != null">
+        orderId = #{orderid,jdbcType=INTEGER},
+      </if>
+      <if test="checksn != null">
+        checkSn = #{checksn,jdbcType=VARCHAR},
+      </if>
+      <if test="checkdate != null">
+        checkDate = #{checkdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="result != null">
+        result = #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="comm != null">
+        comm = #{comm,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.kgc.pojo.OrderCheck">
+    update ordercheck
+    set checkId = #{checkid,jdbcType=INTEGER},
+      orderId = #{orderid,jdbcType=INTEGER},
+      checkSn = #{checksn,jdbcType=VARCHAR},
+      checkDate = #{checkdate,jdbcType=TIMESTAMP},
+      result = #{result,jdbcType=VARCHAR},
+      comm = #{comm,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

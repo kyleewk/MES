@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kgc.mapper.InvGetMapper">
+  <resultMap id="BaseResultMap" type="cn.kgc.pojo.InvGet">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="num" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="type" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="leader" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="team" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="response" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, num, type, leader, team, time, response
+  </sql>
+
+  <select id="findList" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from inv_get
+    <where>
+      <if test="team !=  null and team !=''">
+        and team like concat ('%',#{team},'%')
+      </if>
+      <if test="leader != null and leader !=''">
+        and leader like concat ('%',#{leder},'%')
+      </if>
+    </where>
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from inv_get
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from inv_get
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.kgc.pojo.InvGet">
+    insert into inv_get ( num,
+      type, leader, team, 
+      time, response)
+    values (#{num,jdbcType=VARCHAR},
+      #{type,jdbcType=VARCHAR}, #{leader,jdbcType=VARCHAR}, #{team,jdbcType=VARCHAR}, 
+      #{time,jdbcType=TIMESTAMP}, #{response,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insert1" parameterType="cn.kgc.pojo.InvGet">
+    insert into inv_save (num,
+                          type, team, time, response, sresponse)
+    values (#{num,jdbcType=VARCHAR},
+            #{type,jdbcType=VARCHAR}, #{team,jdbcType=VARCHAR}, #{time,jdbcType=TIMESTAMP}, #{response,jdbcType=VARCHAR}, '未入库')
+  </insert>
+  <insert id="insertSelective" parameterType="cn.kgc.pojo.InvGet">
+    insert into inv_get
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="num != null">
+        num,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="leader != null">
+        leader,
+      </if>
+      <if test="team != null">
+        team,
+      </if>
+      <if test="time != null">
+        time,
+      </if>
+      <if test="response !=null">
+        response,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="num != null">
+        #{num,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="leader != null">
+        #{leader,jdbcType=VARCHAR},
+      </if>
+      <if test="team != null">
+        #{team,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null">
+        #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="response != null">
+        #{response,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.kgc.pojo.InvGet">
+    update inv_get
+    <set>
+      <if test="num != null">
+        num = #{num,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="leader != null">
+        leader = #{leader,jdbcType=VARCHAR},
+      </if>
+      <if test="team != null">
+        team = #{team,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null">
+        time = #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="response != null">
+        response = #{response,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.kgc.pojo.InvGet">
+    update inv_get
+    set
+      num = #{num,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      leader = #{leader,jdbcType=VARCHAR},
+      team = #{team,jdbcType=VARCHAR},
+      time = #{time,jdbcType=TIMESTAMP},
+      response = #{response,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kgc.mapper.TraceMapper">
+  <resultMap id="BaseResultMap" type="cn.kgc.pojo.Trace">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="orderId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="craftId" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="productId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="teamId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="invGetId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="invSaveId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="invBackId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    </constructor>
+  </resultMap>
+
+  <resultMap id="tr" type="cn.kgc.pojo.Trace">
+      <id column="id" property="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <result column="orderId" property="orderid" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <result column="craftId" property="craftid" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <result column="productId" property="productid" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <result column="teamId" property="teamid" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <result column="invGetId" property="invgetid" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <result column="invSaveId" property="invsaveid" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <result column="invBackId" property="invbackid" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <association property="order" resultMap="or" />
+  </resultMap>
+
+  <resultMap id="or" type="cn.kgc.pojo.Order">
+    <id column="id" property="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="productLine" property="productline" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="device" property="device"  javaType="java.lang.String" jdbcType="VARCHAR" />
+    <result column="materiel" property="materiel" javaType="java.lang.String" jdbcType="VARCHAR" />
+    <result column="team" property="team" javaType="java.lang.String" jdbcType="VARCHAR" />
+    <result column="leader" property="leader" javaType="java.lang.String" jdbcType="VARCHAR" />
+    <result column="progress" property="progress" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="machineType" property="machinetype"  javaType="java.lang.String" jdbcType="VARCHAR" />
+    <result column="targetNum" property="targetnum" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="startTime" property="starttime" javaType="java.util.Date" jdbcType="DATE" />
+    <result column="endTime" property="endtime" javaType="java.util.Date" jdbcType="DATE" />
+    <result column="connectId" property="connectid"  javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="createTime" property="createtime"  javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    <result column="nextId" property="nextid" javaType="java.lang.String" jdbcType="VARCHAR" />
+    <result column="modifyTime" property="modifytime"  javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    <result column="status" property="status"  javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="isClosed" property="isclosed"  javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="closeReason" property="closereason"  javaType="java.lang.String" jdbcType="VARCHAR" />
+    <association property="employee" resultMap="emp" />
+    <association property="employee2" resultMap="emp2" />
+  </resultMap>
+
+  <resultMap id="emp" type="cn.kgc.pojo.Employee">
+    <id column="sn" property="sn"  javaType="java.lang.String" jdbcType="VARCHAR" />
+    <result column="department_id" property="departmentId"  javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="position_id" property="positionId"  javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="name" property="name"  javaType="java.lang.String" jdbcType="VARCHAR" />
+    <result column="password" property="password"  javaType="java.lang.String" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="emp2" type="cn.kgc.pojo.Employee">
+    <id column="sn2" property="sn"  javaType="java.lang.String" jdbcType="VARCHAR" />
+    <result column="department_id2" property="departmentId"  javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="position_id2" property="positionId"  javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="name2" property="name"  javaType="java.lang.String" jdbcType="VARCHAR" />
+    <result column="password2" property="password"  javaType="java.lang.String" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, orderId, craftId, productId, teamId, invGetId, invSaveId, invBackId
+  </sql>
+
+
+  <select id="findList" resultMap="tr">
+    select
+    t.id, t.orderId, t.craftId, t.productId, t.teamId, t.invGetId, t.invSaveId, t.invBackId,
+    o.connectId
+    from trace t join  orderlist o on t.orderId = o.id
+    <where>
+      <if test="productLine != 0">
+        productLine = #{productLine}
+      </if>
+      <if test="orderId != null and orderId != ''">
+        and orderId = #{orderId}
+      </if>
+    </where>
+    ORDER BY t.id DESC
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from trace
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from trace
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.kgc.pojo.Trace">
+    insert into trace (id, orderId, craftId, 
+      productId, teamId, invGetId, 
+      invSaveId, invBackId)
+    values (#{id,jdbcType=INTEGER}, #{orderid,jdbcType=INTEGER}, #{craftid,jdbcType=VARCHAR},
+      #{productid,jdbcType=INTEGER}, #{teamid,jdbcType=INTEGER}, #{invgetid,jdbcType=INTEGER}, 
+      #{invsaveid,jdbcType=INTEGER}, #{invbackid,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.kgc.pojo.Trace">
+    insert into trace
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="orderid != null">
+        orderId,
+      </if>
+      <if test="craftid != null">
+        craftId,
+      </if>
+      <if test="productid != null">
+        productId,
+      </if>
+      <if test="teamid != null">
+        teamId,
+      </if>
+      <if test="invgetid != null">
+        invGetId,
+      </if>
+      <if test="invsaveid != null">
+        invSaveId,
+      </if>
+      <if test="invbackid != null">
+        invBackId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderid != null">
+        #{orderid,jdbcType=INTEGER},
+      </if>
+      <if test="craftid != null">
+        #{craftid,jdbcType=VARCHAR},
+      </if>
+      <if test="productid != null">
+        #{productid,jdbcType=INTEGER},
+      </if>
+      <if test="teamid != null">
+        #{teamid,jdbcType=INTEGER},
+      </if>
+      <if test="invgetid != null">
+        #{invgetid,jdbcType=INTEGER},
+      </if>
+      <if test="invsaveid != null">
+        #{invsaveid,jdbcType=INTEGER},
+      </if>
+      <if test="invbackid != null">
+        #{invbackid,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.kgc.pojo.Trace">
+    update trace
+    <set>
+      <if test="orderid != null">
+        orderId = #{orderid,jdbcType=INTEGER},
+      </if>
+      <if test="craftid != null">
+        craftId = #{craftid,jdbcType=VARCHAR},
+      </if>
+      <if test="productid != null">
+        productId = #{productid,jdbcType=INTEGER},
+      </if>
+      <if test="teamid != null">
+        teamId = #{teamid,jdbcType=INTEGER},
+      </if>
+      <if test="invgetid != null">
+        invGetId = #{invgetid,jdbcType=INTEGER},
+      </if>
+      <if test="invsaveid != null">
+        invSaveId = #{invsaveid,jdbcType=INTEGER},
+      </if>
+      <if test="invbackid != null">
+        invBackId = #{invbackid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.kgc.pojo.Trace">
+    update trace
+    set orderId = #{orderid,jdbcType=INTEGER},
+      craftId = #{craftid,jdbcType=VARCHAR},
+      productId = #{productid,jdbcType=INTEGER},
+      teamId = #{teamid,jdbcType=INTEGER},
+      invGetId = #{invgetid,jdbcType=INTEGER},
+      invSaveId = #{invsaveid,jdbcType=INTEGER},
+      invBackId = #{invbackid,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kgc.mapper.TeamMapper">
+  <resultMap id="BaseResultMap" type="cn.kgc.pojo.Team">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="productDepartment" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="productName" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="productTeam" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="teamTotal" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="completeTotalPlan" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="completeTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, productDepartment, productName, productTeam, teamTotal, completeTotalPlan, completeTime
+  </sql>
+
+  <select id="findList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from team
+    <where>
+      <if test="id != null and id != ''">
+        id = #{id}
+      </if>
+      <if test="productdepartment != null and productdepartment != ''">
+        productdepartment = #{productdepartment}
+      </if>
+    </where>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from team
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from team
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.kgc.pojo.Team">
+    insert into team (id, productDepartment, productName, 
+      productTeam, teamTotal, completeTotalPlan, 
+      completeTime)
+    values (#{id,jdbcType=INTEGER}, #{productdepartment,jdbcType=VARCHAR}, #{productname,jdbcType=VARCHAR}, 
+      #{productteam,jdbcType=VARCHAR}, #{teamtotal,jdbcType=INTEGER}, #{completetotalplan,jdbcType=INTEGER}, 
+      #{completetime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.kgc.pojo.Team">
+    insert into team
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="productdepartment != null">
+        productDepartment,
+      </if>
+      <if test="productname != null">
+        productName,
+      </if>
+      <if test="productteam != null">
+        productTeam,
+      </if>
+      <if test="teamtotal != null">
+        teamTotal,
+      </if>
+      <if test="completetotalplan != null">
+        completeTotalPlan,
+      </if>
+      <if test="completetime != null">
+        completeTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="productdepartment != null">
+        #{productdepartment,jdbcType=VARCHAR},
+      </if>
+      <if test="productname != null">
+        #{productname,jdbcType=VARCHAR},
+      </if>
+      <if test="productteam != null">
+        #{productteam,jdbcType=VARCHAR},
+      </if>
+      <if test="teamtotal != null">
+        #{teamtotal,jdbcType=INTEGER},
+      </if>
+      <if test="completetotalplan != null">
+        #{completetotalplan,jdbcType=INTEGER},
+      </if>
+      <if test="completetime != null">
+        #{completetime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.kgc.pojo.Team">
+    update team
+    <set>
+      <if test="productdepartment != null">
+        productDepartment = #{productdepartment,jdbcType=VARCHAR},
+      </if>
+      <if test="productname != null">
+        productName = #{productname,jdbcType=VARCHAR},
+      </if>
+      <if test="productteam != null">
+        productTeam = #{productteam,jdbcType=VARCHAR},
+      </if>
+      <if test="teamtotal != null">
+        teamTotal = #{teamtotal,jdbcType=INTEGER},
+      </if>
+      <if test="completetotalplan != null">
+        completeTotalPlan = #{completetotalplan,jdbcType=INTEGER},
+      </if>
+      <if test="completetime != null">
+        completeTime = #{completetime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.kgc.pojo.Team">
+    update team
+    set productDepartment = #{productdepartment,jdbcType=VARCHAR},
+      productName = #{productname,jdbcType=VARCHAR},
+      productTeam = #{productteam,jdbcType=VARCHAR},
+      teamTotal = #{teamtotal,jdbcType=INTEGER},
+      completeTotalPlan = #{completetotalplan,jdbcType=INTEGER},
+      completeTime = #{completetime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="getTeamSum" resultType="java.lang.Integer">
+    SELECT sum(teamTotal)
+    FROM `team`
+  </select>
+
+</mapper>

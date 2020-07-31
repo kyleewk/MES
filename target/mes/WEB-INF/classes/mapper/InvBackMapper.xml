@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kgc.mapper.InvBackMapper">
+  <resultMap id="BaseResultMap" type="cn.kgc.pojo.InvBack">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="num" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="type" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="team" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="reason" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="response" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, num, type, team, time, reason, response
+  </sql>
+
+
+  <select id="findList" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from inv_back
+    <where>
+      <if test="id !=0">
+        id = #{id}
+      </if>
+      <if test="team != null and team !=''">
+        and team like concat ('%',#{team},'%')
+      </if>
+    </where>
+  </select>
+
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from inv_back
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from inv_back
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+
+  <insert id="insert" parameterType="cn.kgc.pojo.InvBack" useGeneratedKeys="true" keyProperty="id">
+    insert into inv_back ( num,
+      type, team, time, reason,
+      response)
+    values (#{num,jdbcType=VARCHAR},
+      #{type,jdbcType=VARCHAR}, #{team,jdbcType=VARCHAR}, #{time,jdbcType=TIMESTAMP}, #{reason,jdbcType=VARCHAR},
+      #{response,jdbcType=VARCHAR})
+  </insert>
+
+
+  <insert id="insertSelective" parameterType="cn.kgc.pojo.InvBack">
+    insert into inv_back
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="num != null">
+        num,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="team != null">
+        team,
+      </if>
+      <if test="time != null">
+        time,
+      </if>
+      <if test="reason != null">
+        reason,
+      </if>
+      <if test="response != null">
+        response,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="num != null">
+        #{num,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="team != null">
+        #{team,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null">
+        #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reason != null">
+        #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="response != null">
+        #{response,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="cn.kgc.pojo.InvBack">
+    update inv_back
+    <set>
+      <if test="num != null">
+        num = #{num,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="team != null">
+        team = #{team,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null">
+        time = #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="reason != null">
+        reason = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="response != null">
+        response = #{response,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+  <update id="updateByPrimaryKey" parameterType="cn.kgc.pojo.InvBack">
+    update inv_back
+    set
+      num = #{num,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      team = #{team,jdbcType=VARCHAR},
+      time = #{time,jdbcType=TIMESTAMP},
+      reason = #{reason,jdbcType=VARCHAR},
+      response = #{response,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

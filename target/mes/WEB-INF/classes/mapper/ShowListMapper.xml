@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kgc.mapper.ShowListMapper">
+  <resultMap id="BaseResultMap" type="cn.kgc.pojo.ShowList">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="date" javaType="java.util.Date" jdbcType="DATE" />
+      <arg column="num" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="type" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="total" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="acc" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="bad" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, date, num, type, total, acc, bad
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from show_list
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from show_list
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.kgc.pojo.ShowList">
+    insert into show_list (id, date, num, type, 
+      total, acc, bad)
+    values (#{id,jdbcType=INTEGER}, #{date,jdbcType=DATE}, #{num,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, 
+      #{total,jdbcType=VARCHAR}, #{acc,jdbcType=VARCHAR}, #{bad,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.kgc.pojo.ShowList">
+    insert into show_list
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="date != null">
+        date,
+      </if>
+      <if test="num != null">
+        num,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="total != null">
+        total,
+      </if>
+      <if test="acc != null">
+        acc,
+      </if>
+      <if test="bad != null">
+        bad,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="date != null">
+        #{date,jdbcType=DATE},
+      </if>
+      <if test="num != null">
+        #{num,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="total != null">
+        #{total,jdbcType=VARCHAR},
+      </if>
+      <if test="acc != null">
+        #{acc,jdbcType=VARCHAR},
+      </if>
+      <if test="bad != null">
+        #{bad,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.kgc.pojo.ShowList">
+    update show_list
+    <set>
+      <if test="date != null">
+        date = #{date,jdbcType=DATE},
+      </if>
+      <if test="num != null">
+        num = #{num,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="total != null">
+        total = #{total,jdbcType=VARCHAR},
+      </if>
+      <if test="acc != null">
+        acc = #{acc,jdbcType=VARCHAR},
+      </if>
+      <if test="bad != null">
+        bad = #{bad,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.kgc.pojo.ShowList">
+    update show_list
+    set date = #{date,jdbcType=DATE},
+      num = #{num,jdbcType=INTEGER},
+      type = #{type,jdbcType=VARCHAR},
+      total = #{total,jdbcType=VARCHAR},
+      acc = #{acc,jdbcType=VARCHAR},
+      bad = #{bad,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

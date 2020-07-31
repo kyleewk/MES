@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kgc.mapper.MonitoringMapper">
+  <resultMap id="BaseResultMap" type="cn.kgc.pojo.Monitoring">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="deviceName" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="checkPoint" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="detection" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="standard" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="record" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="recordDate" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, deviceName, checkPoint, detection, standard, record, recordDate
+  </sql>
+
+  <select id="findList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from monitoring
+    <where>
+      <if test="id != null and id != ''">
+       id = #{id}
+      </if>
+      <if test="devicename != null and devicename != ''">
+        devicename = #{devicename}
+      </if>
+    </where>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from monitoring
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from monitoring
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.kgc.pojo.Monitoring">
+    insert into monitoring (id, deviceName, checkPoint, 
+      detection, standard, record, 
+      recordDate)
+    values (#{id,jdbcType=INTEGER}, #{devicename,jdbcType=VARCHAR}, #{checkpoint,jdbcType=VARCHAR}, 
+      #{detection,jdbcType=VARCHAR}, #{standard,jdbcType=VARCHAR}, #{record,jdbcType=VARCHAR}, 
+      #{recorddate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.kgc.pojo.Monitoring">
+    insert into monitoring
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="devicename != null">
+        deviceName,
+      </if>
+      <if test="checkpoint != null">
+        checkPoint,
+      </if>
+      <if test="detection != null">
+        detection,
+      </if>
+      <if test="standard != null">
+        standard,
+      </if>
+      <if test="record != null">
+        record,
+      </if>
+      <if test="recorddate != null">
+        recordDate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="devicename != null">
+        #{devicename,jdbcType=VARCHAR},
+      </if>
+      <if test="checkpoint != null">
+        #{checkpoint,jdbcType=VARCHAR},
+      </if>
+      <if test="detection != null">
+        #{detection,jdbcType=VARCHAR},
+      </if>
+      <if test="standard != null">
+        #{standard,jdbcType=VARCHAR},
+      </if>
+      <if test="record != null">
+        #{record,jdbcType=VARCHAR},
+      </if>
+      <if test="recorddate != null">
+        #{recorddate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.kgc.pojo.Monitoring">
+    update monitoring
+    <set>
+      <if test="devicename != null">
+        deviceName = #{devicename,jdbcType=VARCHAR},
+      </if>
+      <if test="checkpoint != null">
+        checkPoint = #{checkpoint,jdbcType=VARCHAR},
+      </if>
+      <if test="detection != null">
+        detection = #{detection,jdbcType=VARCHAR},
+      </if>
+      <if test="standard != null">
+        standard = #{standard,jdbcType=VARCHAR},
+      </if>
+      <if test="record != null">
+        record = #{record,jdbcType=VARCHAR},
+      </if>
+      <if test="recorddate != null">
+        recordDate = #{recorddate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.kgc.pojo.Monitoring">
+    update monitoring
+    set deviceName = #{devicename,jdbcType=VARCHAR},
+      checkPoint = #{checkpoint,jdbcType=VARCHAR},
+      detection = #{detection,jdbcType=VARCHAR},
+      standard = #{standard,jdbcType=VARCHAR},
+      record = #{record,jdbcType=VARCHAR},
+      recordDate = #{recorddate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

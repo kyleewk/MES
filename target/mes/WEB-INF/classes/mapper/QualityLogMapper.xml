@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kgc.mapper.QualityLogMapper">
+  <resultMap id="BaseResultMap" type="cn.kgc.pojo.QualityLog">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="orderId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="machineType" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="team" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="createDate" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="status" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="isMistake" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="isRepair" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="reason" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="result" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="date" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="modifyTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, orderId, machineType, team, createDate, status, isMistake, isRepair, reason,
+    result, date, modifyTime
+  </sql>
+
+  <select id="findList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from qualitylog
+    <where>
+      <if test="orderid != null and orderid != ''">
+        orderId = #{orderid}
+      </if>
+
+    </where>
+    order by  modifyTime DESC
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from qualitylog
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from qualitylog
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.kgc.pojo.QualityLog">
+    insert into qualitylog (orderId, machineType,
+      team, createDate, status,
+      isMistake, isRepair, reason,
+      result, modifyTime)
+    values (#{orderid,jdbcType=INTEGER}, #{machinetype,jdbcType=VARCHAR},
+      #{team,jdbcType=VARCHAR}, now(), #{status,jdbcType=INTEGER},
+      #{ismistake,jdbcType=INTEGER}, #{isrepair,jdbcType=INTEGER}, #{reason,jdbcType=VARCHAR},
+      #{result,jdbcType=VARCHAR}, now())
+  </insert>
+  <insert id="insertSelective" parameterType="cn.kgc.pojo.QualityLog">
+    insert into qualitylog
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="orderid != null">
+        orderId,
+      </if>
+      <if test="machinetype != null">
+        machineType,
+      </if>
+      <if test="team != null">
+        team,
+      </if>
+      <if test="createdate != null">
+        createDate,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="ismistake != null">
+        isMistake,
+      </if>
+      <if test="isrepair != null">
+        isRepair,
+      </if>
+      <if test="reason != null">
+        reason,
+      </if>
+      <if test="result != null">
+        result,
+      </if>
+      <if test="date != null">
+        date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orderid != null">
+        #{orderid,jdbcType=INTEGER},
+      </if>
+      <if test="machinetype != null">
+        #{machinetype,jdbcType=VARCHAR},
+      </if>
+      <if test="team != null">
+        #{team,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null">
+        #{createdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="ismistake != null">
+        #{ismistake,jdbcType=INTEGER},
+      </if>
+      <if test="isrepair != null">
+        #{isrepair,jdbcType=INTEGER},
+      </if>
+      <if test="reason != null">
+        #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="result != null">
+        #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null">
+        #{date,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.kgc.pojo.QualityLog">
+    update qualitylog
+    <set>
+      <if test="orderid != null">
+        orderId = #{orderid,jdbcType=INTEGER},
+      </if>
+      <if test="machinetype != null">
+        machineType = #{machinetype,jdbcType=VARCHAR},
+      </if>
+      <if test="team != null">
+        team = #{team,jdbcType=VARCHAR},
+      </if>
+      <if test="createdate != null">
+        createDate = #{createdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="ismistake != null">
+        isMistake = #{ismistake,jdbcType=INTEGER},
+      </if>
+      <if test="isrepair != null">
+        isRepair = #{isrepair,jdbcType=INTEGER},
+      </if>
+      <if test="reason != null">
+        reason = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="result != null">
+        result = #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null">
+        date = #{date,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.kgc.pojo.QualityLog">
+    update qualitylog
+    set
+      status = 2,
+      isMistake = 1,
+      isRepair = #{isrepair,jdbcType=INTEGER},
+      reason = #{reason,jdbcType=VARCHAR},
+      result = #{result,jdbcType=VARCHAR},
+      date = now(),
+      modifyTime = now()
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

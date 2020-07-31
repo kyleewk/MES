@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kgc.mapper.EmployeeMapper">
+  <resultMap id="BaseResultMap" type="cn.kgc.pojo.Employee">
+    <constructor>
+      <idArg column="sn" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="department_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="position_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="password" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="roleId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    </constructor>
+  </resultMap>
+
+  <resultMap id="emp" type="cn.kgc.pojo.Employee">
+      <id column="sn" property="sn" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <result column="department_id" property="departmentId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <result column="position_id" property="positionId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <result column="name" property="name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <result column="password" property="password" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <result column="password" property="password" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <result column="roleId" property="roleid" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <collection property="roles" resultMap="role"/>
+      <collection property="department" resultMap="dept"/>
+  </resultMap>
+
+  <resultMap id="role" type="cn.kgc.pojo.Role">
+      <id column="id" property="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <result column="permId" property="permid" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <result column="roleName" property="rolename" javaType="java.lang.String" jdbcType="VARCHAR" />
+    <collection property="perms" resultMap="perm"/>
+  </resultMap>
+
+  <resultMap id="perm" type="cn.kgc.pojo.Perm">
+      <id column="id" property="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <result column="permName" property="permname" javaType="java.lang.String" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <resultMap id="dept" type="cn.kgc.pojo.Department">
+      <id column="id" property="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <result column="departmentName" property="name" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <collection property="perms" resultMap="perm"/>
+  </resultMap>
+
+
+  <sql id="Base_Column_List">
+    sn, department_id, position_id, name, password ,roleId
+  </sql>
+  <select id="findList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sys_employee
+    <where>
+      <if test="sn != null and sn != ''">
+        sn = #{sn}
+      </if>
+      <if test="name != null and name != ''">
+        name = #{name}
+      </if>
+    </where>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_employee
+    where sn = #{sn,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from sys_employee
+    where sn = #{sn,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="cn.kgc.pojo.Employee">
+    insert into sys_employee (sn, department_id, position_id, 
+      name, password,roleId)
+    values (#{sn,jdbcType=VARCHAR}, #{departmentId,jdbcType=INTEGER}, #{positionId,jdbcType=INTEGER}, 
+      #{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},#{roleid,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.kgc.pojo.Employee">
+    insert into sys_employee
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="sn != null">
+        sn,
+      </if>
+      <if test="departmentId != null">
+        department_id,
+      </if>
+      <if test="positionId != null">
+        position_id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="roleid != null">
+        roleId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="sn != null">
+        #{sn,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentId != null">
+        #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="positionId != null">
+        #{positionId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="roleid != null">
+        #{roleid,jdbcType=INTEGER}
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.kgc.pojo.Employee">
+    update sys_employee
+    <set>
+      <if test="departmentId != null">
+        department_id = #{departmentId,jdbcType=INTEGER},
+      </if>
+      <if test="positionId != null">
+        position_id = #{positionId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="roleid != null">
+        roleid = #{roleid,jdbcType=INTEGER},
+      </if>
+    </set>
+    where sn = #{sn,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.kgc.pojo.Employee">
+    update sys_employee
+    set department_id = #{departmentId,jdbcType=INTEGER},
+      position_id = #{positionId,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      roleid = #{roleid,jdbcType=INTEGER}
+    where sn = #{sn,jdbcType=VARCHAR}
+  </update>
+
+  <select id="getNext" parameterType="String" resultType="cn.kgc.pojo.Employee">
+
+    SELECT e.sn,e.`name`
+    FROM sys_employee e
+    <where>
+      e.position_id = 2
+      <if test="status == 1">
+        and e.department_id = 1
+      </if>
+      <if test="status == 2">
+        and e.department_id = 2
+      </if>
+      <if test="status == 3">
+        and e.department_id = 3
+      </if>
+    </where>
+
+  </select>
+
+  <!--//根据用户名获取用户-->
+  <select id="findByEmpName" parameterType="String" resultType="cn.kgc.pojo.Employee">
+    SELECT e.sn,e.`name`,e.`password`,e.salt
+    FROM sys_employee e
+    WHERE e.sn = #{name,jdbcType=VARCHAR}
+  </select>
+
+  <!--//根据用户名获取所有角色信息-->
+  <select id="findRoleByEmpName" parameterType="String" resultMap="emp">
+    SELECT e.sn,e.`name`,e.`password`,r.id,r.roleName,e.salt
+    FROM sys_employee e join role r on  e.roleId = r.id
+    WHERE e.`name` = #{name,jdbcType=VARCHAR}
+  </select>
+
+  <!--//根据用户名获取所有部门信息-->
+  <select id="findDeptByEmpName" parameterType="String" resultMap="emp">
+    SELECT e.sn,e.`name`,e.`password`,d.id,d.name departmentName,e.salt
+    FROM sys_employee e join sys_department d  on  e.department_id = d.id
+    WHERE e.`name` = #{name,jdbcType=VARCHAR}
+  </select>
+
+  <!--//根据用户sn获取所有部门信息-->
+  <select id="findEmpBySn" parameterType="String" resultMap="emp">
+    SELECT e.sn,e.`name`,e.`password`,d.id,d.name departmentName,e.salt,e.department_id,e.position_id
+    FROM sys_employee e join sys_department d  on  e.department_id = d.id
+    WHERE e.sn = #{sn,jdbcType=VARCHAR}
+  </select>
+
+  <!--//根据角色获取权限信息-->
+  <select id="findPermByRoleId" parameterType="java.lang.Integer" resultMap="perm">
+    select p.id , p.permName
+    from role r join perm p on r.id = p.roleId
+    where r.id = #{id,jdbcType=INTEGER}
+  </select>
+
+
+
+  <!--用户注册-->
+  <insert id="register" >
+    insert into sys_employee (sn, department_id, position_id,
+      name, password,roleId,salt)
+    values (#{sn,jdbcType=VARCHAR}, #{departmentId,jdbcType=INTEGER}, #{positionId,jdbcType=INTEGER},
+      #{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},#{roleid,jdbcType=INTEGER},#{salt,jdbcType=VARCHAR})
+
+  </insert>
+
+  <!--//根据部门获取权限信息-->
+  <select id="findPermByDeptId" parameterType="java.lang.Integer" resultMap="perm">
+    select p.id , p.permName
+    from sys_employee e join perm p on e.department_id = p.departmentId
+    where e.department_id = #{id,jdbcType=INTEGER}
+  </select>
+
+
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

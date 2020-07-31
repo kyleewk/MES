@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kgc.mapper.ClientMapper">
+  <resultMap id="BaseResultMap" type="cn.kgc.pojo.Client">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="customerName" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="address" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="productName" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="quantity" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="orderStartDate" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="orderStopDate" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, customerName, address, productName, quantity, orderStartDate, orderStopDate
+  </sql>
+  <select id="findList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from client
+    <where>
+      <if test="customername != null and customername != ''">
+        customername = #{customername}
+      </if>
+      <if test="productname != null and productname != ''">
+        productname = #{productname}
+      </if>
+    </where>
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from client
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from client
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.kgc.pojo.Client">
+    insert into client (id, customerName, address, 
+      productName, quantity, orderStartDate, 
+      orderStopDate)
+    values (#{id,jdbcType=INTEGER}, #{customername,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{productname,jdbcType=VARCHAR}, #{quantity,jdbcType=INTEGER}, #{orderstartdate,jdbcType=TIMESTAMP}, 
+      #{orderstopdate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.kgc.pojo.Client">
+    insert into client
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="customername != null">
+        customerName,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="productname != null">
+        productName,
+      </if>
+      <if test="quantity != null">
+        quantity,
+      </if>
+      <if test="orderstartdate != null">
+        orderStartDate,
+      </if>
+      <if test="orderstopdate != null">
+        orderStopDate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="customername != null">
+        #{customername,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="productname != null">
+        #{productname,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null">
+        #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="orderstartdate != null">
+        #{orderstartdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderstopdate != null">
+        #{orderstopdate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.kgc.pojo.Client">
+    update client
+    <set>
+      <if test="customername != null">
+        customerName = #{customername,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="productname != null">
+        productName = #{productname,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null">
+        quantity = #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="orderstartdate != null">
+        orderStartDate = #{orderstartdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orderstopdate != null">
+        orderStopDate = #{orderstopdate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.kgc.pojo.Client">
+    update client
+    set customerName = #{customername,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      productName = #{productname,jdbcType=VARCHAR},
+      quantity = #{quantity,jdbcType=INTEGER},
+      orderStartDate = #{orderstartdate,jdbcType=TIMESTAMP},
+      orderStopDate = #{orderstopdate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

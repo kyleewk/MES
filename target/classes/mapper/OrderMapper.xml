@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kgc.mapper.OrderMapper">
+  <resultMap id="BaseResultMap" type="cn.kgc.pojo.Order">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="productLine" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="device" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="materiel" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="team" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="leader" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="progress" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="machineType" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="targetNum" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="startTime" javaType="java.util.Date" jdbcType="DATE" />
+      <arg column="endTime" javaType="java.util.Date" jdbcType="DATE" />
+      <arg column="connectId" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="createTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="nextId" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="modifyTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="status" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="isClosed" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="closeReason" javaType="java.lang.String" jdbcType="VARCHAR" />
+    </constructor>
+  </resultMap>
+
+
+  <resultMap id="or" type="cn.kgc.pojo.Order">
+    <id column="id" property="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="productLine" property="productline" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="device" property="device"  javaType="java.lang.String" jdbcType="VARCHAR" />
+    <result column="materiel" property="materiel" javaType="java.lang.String" jdbcType="VARCHAR" />
+    <result column="team" property="team" javaType="java.lang.String" jdbcType="VARCHAR" />
+    <result column="leader" property="leader" javaType="java.lang.String" jdbcType="VARCHAR" />
+    <result column="progress" property="progress" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="machineType" property="machinetype"  javaType="java.lang.String" jdbcType="VARCHAR" />
+    <result column="targetNum" property="targetnum" javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="startTime" property="starttime" javaType="java.util.Date" jdbcType="DATE" />
+    <result column="endTime" property="endtime" javaType="java.util.Date" jdbcType="DATE" />
+    <result column="connectId" property="connectid"  javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="createTime" property="createtime"  javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    <result column="nextId" property="nextid" javaType="java.lang.String" jdbcType="VARCHAR" />
+    <result column="modifyTime" property="modifytime"  javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    <result column="status" property="status"  javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="isClosed" property="isclosed"  javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="closeReason" property="closereason"  javaType="java.lang.String" jdbcType="VARCHAR" />
+    <association property="employee" resultMap="emp" />
+    <association property="employee2" resultMap="emp2" />
+  </resultMap>
+
+  <resultMap id="emp" type="cn.kgc.pojo.Employee">
+    <id column="sn" property="sn"  javaType="java.lang.String" jdbcType="VARCHAR" />
+    <result column="department_id" property="departmentId"  javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="position_id" property="positionId"  javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="name" property="name"  javaType="java.lang.String" jdbcType="VARCHAR" />
+    <result column="password" property="password"  javaType="java.lang.String" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="emp2" type="cn.kgc.pojo.Employee">
+    <id column="sn2" property="sn"  javaType="java.lang.String" jdbcType="VARCHAR" />
+    <result column="department_id2" property="departmentId"  javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="position_id2" property="positionId"  javaType="java.lang.Integer" jdbcType="INTEGER" />
+    <result column="name2" property="name"  javaType="java.lang.String" jdbcType="VARCHAR" />
+    <result column="password2" property="password"  javaType="java.lang.String" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, productLine, device, materiel, team, leader, progress, machineType, targetNum, 
+    startTime, endTime, connectId, createTime, nextId, modifyTime, status, isClosed, 
+    closeReason
+  </sql>
+
+  <select id="findList" resultMap="or">
+    SELECT
+    o.id, o.productLine, o.device, o.materiel, o.team, o.leader, o.progress, o.machineType, o.targetNum,
+    o.startTime, o.endTime, o.connectId, o.createTime, o.nextId, o.modifyTime, o.status, o.isClosed,
+    o.closeReason,e.`name`,e.sn,e2.`name` name2,e2.sn sn2
+    FROM	orderlist o JOIN sys_employee e on o.leader = e.sn
+    JOIN sys_employee e2 on o.nextId = e2.sn
+    <where>
+      <if test="productLine != 0">
+        productLine = #{productLine}
+      </if>
+      <if test="machineType != null and machineType != ''">
+        and machineType like concat ('%',#{machineType},'%')
+      </if>
+    </where>
+    ORDER BY o.modifyTime DESC
+  </select>
+
+  <select id="findCheckList" resultMap="or">
+    SELECT
+    o.id, o.productLine, o.device, o.materiel, o.team, o.leader, o.progress, o.machineType, o.targetNum,
+    o.startTime, o.endTime, o.connectId, o.createTime, o.nextId, o.modifyTime, o.status, o.isClosed,
+    o.closeReason,e.`name`,e.sn,e2.`name` name2,e2.sn sn2
+    FROM	orderlist o JOIN sys_employee e on o.leader = e.sn
+    JOIN sys_employee e2 on o.nextId = e2.sn
+    <where>
+      o.`status` in (1,2,3) and o.nextId = #{NextId}
+      <if test="leader != null and leader != ''">
+        and e.`name` like concat ('%',#{leader},'%')
+      </if>
+      <if test="machineType != null and machineType != ''">
+        and machineType like concat ('%',#{machineType},'%')
+      </if>
+    </where>
+    ORDER BY o.modifyTime DESC
+  </select>
+
+
+  <select id="getPro11" parameterType="String" resultType="cn.kgc.pojo.Order">
+    SELECT productline , sum(targetNum) targetnum
+    FROM orderlist
+    where machineType = #{machinetype}
+    GROUP BY productLine
+    ORDER BY productLine
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="or">
+    SELECT
+    o.id, o.productLine, o.device, o.materiel, o.team, o.leader, o.progress, o.machineType, o.targetNum,
+    o.startTime, o.endTime, o.connectId, o.createTime, o.nextId, o.modifyTime, o.status, o.isClosed,
+    o.closeReason,e.`name`,e.sn,e2.`name` name2,e2.sn sn2
+    FROM	orderlist o JOIN sys_employee e on o.leader = e.sn
+    JOIN sys_employee e2 on o.nextId = e2.sn
+    where o.id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from orderlist
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.kgc.pojo.Order">
+    insert into orderlist (productLine, device,
+      materiel, team, leader, machineType, targetNum,
+      startTime, endTime, connectId, 
+      createTime, nextId, modifyTime,status
+      )
+    values (#{productline,jdbcType=INTEGER}, #{device,jdbcType=VARCHAR},
+      #{materiel,jdbcType=VARCHAR}, #{team,jdbcType=VARCHAR}, #{leader,jdbcType=VARCHAR}, #{machinetype,jdbcType=VARCHAR}, #{targetnum,jdbcType=INTEGER},
+      #{starttime,jdbcType=DATE}, #{endtime,jdbcType=DATE}, #{connectid,jdbcType=INTEGER}, 
+      now(), #{nextid,jdbcType=VARCHAR}, now(),1
+      )
+  </insert>
+
+    <insert id="insertSave" parameterType="cn.kgc.pojo.Order">
+    insert into orderlist (productLine, device,
+      materiel, team, leader, machineType, targetNum,
+      startTime, endTime, connectId,
+      createTime, nextId, modifyTime,status
+      )
+    values (#{productline,jdbcType=INTEGER}, #{device,jdbcType=VARCHAR},
+      #{materiel,jdbcType=VARCHAR}, #{team,jdbcType=VARCHAR}, #{leader,jdbcType=VARCHAR}, #{machinetype,jdbcType=VARCHAR}, #{targetnum,jdbcType=INTEGER},
+      #{starttime,jdbcType=DATE}, #{endtime,jdbcType=DATE}, #{connectid,jdbcType=INTEGER},
+      now(), '0', now(),0
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.kgc.pojo.Order">
+    insert into orderlist
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="productline != null">
+        productLine,
+      </if>
+      <if test="device != null">
+        device,
+      </if>
+      <if test="materiel != null">
+        materiel,
+      </if>
+      <if test="team != null">
+        team,
+      </if>
+      <if test="leader != null">
+        leader,
+      </if>
+      <if test="progress != null">
+        progress,
+      </if>
+      <if test="machinetype != null">
+        machineType,
+      </if>
+      <if test="targetnum != null">
+        targetNum,
+      </if>
+      <if test="starttime != null">
+        startTime,
+      </if>
+      <if test="endtime != null">
+        endTime,
+      </if>
+      <if test="connectid != null">
+        connectId,
+      </if>
+      <if test="createtime != null">
+        createTime,
+      </if>
+      <if test="nextid != null">
+        nextId,
+      </if>
+      <if test="modifytime != null">
+        modifyTime,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="isclosed != null">
+        isClosed,
+      </if>
+      <if test="closereason != null">
+        closeReason,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="productline != null">
+        #{productline,jdbcType=INTEGER},
+      </if>
+      <if test="device != null">
+        #{device,jdbcType=VARCHAR},
+      </if>
+      <if test="materiel != null">
+        #{materiel,jdbcType=VARCHAR},
+      </if>
+      <if test="team != null">
+        #{team,jdbcType=VARCHAR},
+      </if>
+      <if test="leader != null">
+        #{leader,jdbcType=VARCHAR},
+      </if>
+      <if test="progress != null">
+        #{progress,jdbcType=INTEGER},
+      </if>
+      <if test="machinetype != null">
+        #{machinetype,jdbcType=VARCHAR},
+      </if>
+      <if test="targetnum != null">
+        #{targetnum,jdbcType=INTEGER},
+      </if>
+      <if test="starttime != null">
+        #{starttime,jdbcType=DATE},
+      </if>
+      <if test="endtime != null">
+        #{endtime,jdbcType=DATE},
+      </if>
+      <if test="connectid != null">
+        #{connectid,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="nextid != null">
+        #{nextid,jdbcType=VARCHAR},
+      </if>
+      <if test="modifytime != null">
+        #{modifytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="isclosed != null">
+        #{isclosed,jdbcType=INTEGER},
+      </if>
+      <if test="closereason != null">
+        #{closereason,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.kgc.pojo.Order">
+    update orderlist
+    <set>
+      <if test="productline != null">
+        productLine = #{productline,jdbcType=INTEGER},
+      </if>
+      <if test="device != null">
+        device = #{device,jdbcType=VARCHAR},
+      </if>
+      <if test="materiel != null">
+        materiel = #{materiel,jdbcType=VARCHAR},
+      </if>
+      <if test="team != null">
+        team = #{team,jdbcType=VARCHAR},
+      </if>
+      <if test="leader != null">
+        leader = #{leader,jdbcType=VARCHAR},
+      </if>
+      <if test="progress != null">
+        progress = #{progress,jdbcType=INTEGER},
+      </if>
+      <if test="machinetype != null">
+        machineType = #{machinetype,jdbcType=VARCHAR},
+      </if>
+      <if test="targetnum != null">
+        targetNum = #{targetnum,jdbcType=INTEGER},
+      </if>
+      <if test="starttime != null">
+        startTime = #{starttime,jdbcType=DATE},
+      </if>
+      <if test="endtime != null">
+        endTime = #{endtime,jdbcType=DATE},
+      </if>
+      <if test="connectid != null">
+        connectId = #{connectid,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null">
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="nextid != null">
+        nextId = #{nextid,jdbcType=VARCHAR},
+      </if>
+        modifyTime = now(),
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="isclosed != null">
+        isClosed = #{isclosed,jdbcType=INTEGER},
+      </if>
+      <if test="closereason != null">
+        closeReason = #{closereason,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.kgc.pojo.Order">
+    update orderlist
+    set productLine = #{productline,jdbcType=INTEGER},
+      device = #{device,jdbcType=VARCHAR},
+      materiel = #{materiel,jdbcType=VARCHAR},
+      team = #{team,jdbcType=VARCHAR},
+      leader = #{leader,jdbcType=VARCHAR},
+      progress = #{progress,jdbcType=INTEGER},
+      machineType = #{machinetype,jdbcType=VARCHAR},
+      targetNum = #{targetnum,jdbcType=INTEGER},
+      startTime = #{starttime,jdbcType=DATE},
+      endTime = #{endtime,jdbcType=DATE},
+      connectId = #{connectid,jdbcType=INTEGER},
+      createTime = #{createtime,jdbcType=TIMESTAMP},
+      nextId = #{nextid,jdbcType=VARCHAR},
+      modifyTime = now(),
+      status = #{status,jdbcType=INTEGER},
+      isClosed = #{isclosed,jdbcType=INTEGER},
+      closeReason = #{closereason,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateToCheck" parameterType="cn.kgc.pojo.Order">
+    update orderlist
+    set
+      nextId = #{nextid,jdbcType=VARCHAR},
+      modifyTime = now(),
+      status = #{status,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

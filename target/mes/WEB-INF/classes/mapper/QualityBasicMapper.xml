@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.kgc.mapper.QualityBasicMapper">
+  <resultMap id="BaseResultMap" type="cn.kgc.pojo.QualityBasic">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="type" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="project" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="proportion" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="target" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="modifyTime" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, type, project, proportion, target, modifyTime
+  </sql>
+  <select id="findList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from qualitybasic
+    <where>
+      <if test="type != null and type != ''">
+        and type like concat ('%',#{type},'%')
+      </if>
+      <if test="project != null and project != ''">
+        and project like concat ('%',#{project},'%')
+      </if>
+    </where>
+    order by  modifyTime DESC
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from qualitybasic
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from qualitybasic
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.kgc.pojo.QualityBasic">
+    insert into qualitybasic (id, type, project, 
+      proportion, target, modifyTime)
+    values (#{id,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, #{project,jdbcType=VARCHAR}, 
+      #{proportion,jdbcType=VARCHAR}, #{target,jdbcType=VARCHAR}, now())
+  </insert>
+  <insert id="insertSelective" parameterType="cn.kgc.pojo.QualityBasic">
+    insert into qualitybasic
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="project != null">
+        project,
+      </if>
+      <if test="proportion != null">
+        proportion,
+      </if>
+      <if test="target != null">
+        target,
+      </if>
+      modifyTime
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="project != null">
+        #{project,jdbcType=VARCHAR},
+      </if>
+      <if test="proportion != null">
+        #{proportion,jdbcType=VARCHAR},
+      </if>
+      <if test="target != null">
+        #{target,jdbcType=VARCHAR},
+      </if>
+      now()
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.kgc.pojo.QualityBasic">
+    update qualitybasic
+    <set>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="project != null">
+        project = #{project,jdbcType=VARCHAR},
+      </if>
+      <if test="proportion != null">
+        proportion = #{proportion,jdbcType=VARCHAR},
+      </if>
+      <if test="target != null">
+        target = #{target,jdbcType=VARCHAR},
+      </if>
+      modifyTime = now()
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.kgc.pojo.QualityBasic">
+    update qualitybasic
+    set type = #{type,jdbcType=VARCHAR},
+      project = #{project,jdbcType=VARCHAR},
+      proportion = #{proportion,jdbcType=VARCHAR},
+      target = #{target,jdbcType=VARCHAR},
+      modifyTime = now()
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
